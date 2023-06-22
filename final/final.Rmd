@@ -180,11 +180,10 @@ betterlifeindex_na %>%
              hc.order = TRUE, 
              type = "lower", 
              outline.color = "white", 
-             
              lab = TRUE)
 ```
 
-```{r, ggscatter,fig.align='center', fig.cap='Doğrusal Regresyon', echo=FALSE}
+```{r, ggscatter,fig.align='center', fig.cap='Saçılım Grafiği', echo=FALSE}
 library("ggpubr")
 ggscatter(betterlifeindex_na, 
           x = "Feeling safe walking alone at night", 

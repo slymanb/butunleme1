@@ -105,7 +105,7 @@ print ("p-değeri:", p_value, "\n")
 # -------------------------------------------------------------------------- ###
 # Soru 4a ----
 # -------------------------------------------------------------------------- ###
-#
+#pivot_longer() komutu kullanılır.
 library(tidyverse)
 
 dat <- tibble(
@@ -123,7 +123,6 @@ dat2 <- dat %>%
 # Soru 5a ----
 # -------------------------------------------------------------------------- ###
 ggplot(), aes(), geom_histogram(), facet_wrap(), labs() ve ggthemes::theme_stata()komutları kullanılmalıdır.
-
 
 
 library(ggplot2)
