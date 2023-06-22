@@ -25,7 +25,7 @@ urlcolor: blue
 fontsize: 12pt
 biblio-style: apalike
 abstract: |
-  Bu bölümde çalışmanızın özetini yazınız.
+  Geleneksel olarak, ekonomik büyüme ve GSYİH gibi göstergeler, bir ülkenin refahını ölçmek için kullanılmaktadır. Ancak, bu göstergeler toplumun gerçek durumunu tam olarak yansıtmada eksik kalabilir. Bu nedenle, yaşam kalitesini ve toplumsal ilerlemeyi değerlendirmek için daha kapsamlı ve çok boyutlu ölçütlerin kullanılması önemlidir. Çalışmada, OECD tarafından paylaşılan Daha İyi Yaşam Endeksi verileri kullanılarak, ülkelerin yaşamdan memnuniyeti çerçevesinde çeşitli ölçütlerin değerlendirilmesi amaçlanmaktadır. Veri setinde yer alan ölçütler arasında eşitsizlik, konut koşulları, iş güvencesi, eğitim, çevre kalitesi, sağlık, sosyal destek ağı gibi faktörler bulunmaktadır.Yöntemsel olarak, veri seti R programlama dili ve ilgili paketler kullanılarak analiz edilmiştir. İlk adımda, veri seti ön işleme aşamasından geçirilmiş ve gerektiğinde eksik veriler tamamlanmıştır. Daha sonra, görselleştirme teknikleri kullanılarak verilerin grafiksel olarak incelenmesi sağlanmıştır. Bu sayede, ülkeler arasındaki farklılıklar, eğilimler ve ilişkiler görsel olarak anlaşılır hale getirilmiştir.Sonuç olarak, çalışmanın temel çıktısı, Daha İyi Yaşam Endeksi verileri kullanarak ülkelerin yaşamdan memnuniyetini çeşitli ölçütler açısından değerlendirmektir. İstatistiksel karşılaştırmalar yapılarak, ülkeler arasındaki farklılıklar ve benzerlikler ortaya konmuştur. 
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(cache = FALSE, echo = TRUE, message = FALSE, warning = FALSE)
@@ -34,25 +34,52 @@ knitr::opts_chunk$set(cache = FALSE, echo = TRUE, message = FALSE, warning = FAL
 <!-- ======================================================================= -->
 <!-- ============================== NOTLAR ================================= -->
 <!-- ======================================================================= -->
-[^1]: 21080744, [Github Repo](https://github.com/slymanb/butunleme.git)
+[^1]: 21080744, [Github Repo](https://github.com/slymanb/butunleme1.git)
 
 # Giriş
-Bu taslak size proje ödevinizi yazarken yardımcı olması amacıyla oluşturulmuştur. Ödevlerinizde, makalelerinizde, sunumlarınızda ve projelerinizde kullandığınız tüm bilgi kaynaklarına atıfta bulunmalısınız. Alıntı ve gönderme yapmak okuyuculara çalışmanızda kullandığınız/başvurduğunuz  kaynaklara ulaşma imkanı sağlar. **Her ne kadar kendi sözlerinizi kullanıyor olsanız da, başkalarına ait fikirleri çalışmanızda aktarıyorsanız bu fikirlerin kaynağını belgelemek zorundasınız. Aksi takdirde akademik intihal yapmış olursunuz.** Yazım konusunda @aydinonat:2007'ye başvurabilirsiniz. 
 
+Ülkelerin refah seviyelerinin tespitinde çeşitli ölçüm yöntemleri kullanılmıştır. GEçmişte bu ölçüm Gayri safi yurt içi hasılaya (GSYİH) indirgense de, günümüzde daha kompleks ve daha fazla veri üzerinden bu ölçümler yapılmaktadır. Bu çerçevede OECD 2011 yılı mayıs ayında ilk olarak "Daha İyi Yaşam Endeksi" (Better Life Index)adında yeni bir refah endeksi önerisinde bulunmuştur [@kaugizman2021daha]. OECD tarafından uygulamaya konulan bu endeks konut, gelir, is, iletisim ve toplum, egitim, çevre, sivil katılım ve yönetim, saglık, yasam memnuniyeti, güvenlik ve is yasam dengesi kriterlerine göre olusturulmaktadır [@akar2014turkiye]. Endeks, toplamda 11 kriterden meydana gelmektedir. refahı daha kapsamlı ele alan bu endeks, bireylerin hangi alanlarda daha mutlu oldugunu ele almaktadır. Bu endeks ile ülkeler geride kaldıkları kriterler konusunda politika üretebilmekte ve bireylerin refahlarını maksimum kılacak uygulamaları yürürlüge koyabilmektedir. Diğer yandan DİYE (Daha İyi Yaşam Endeksi) ülkelerin GSYIH gibi gelir unsuru dışında çok farklı unsurları da dikkate alır [@akar2014turkiye]. Bu 11 göstergenin yanı sıra 24 adet ikincil gösterge de bulunmaktadır. 11 ayrı gösterge ve bunlara karşılık gelen 24 ikincil gösterge aşağıda gösterilmiştir.
 
-Proje ödevinizde yer alan başlıkların bu metinde yer alan başlıkları kesinlikle içermesi gerekmektedir. Burada kullanılan başlıklar haricinde farklı alt başlıklar da kullanabilirsiniz. Projenizi yazarken bu dosyayı taslak olarak kullanıp içeriğini projenize uyarlayınız.
+(1) Gelir (Hanehalkı geliri; Hanehalkı mali serveti)
+
+(2) İşler (İstihdam oranı; Kişisel kazanç; İş güvencesi; Uzun süreli işsizlik oranı)
+
+(3) Barınma (Kişi başı oda; Barınma giderleri; Temel imkanları olan konutlar)
+
+(4) İş-yaşam dengesi (Çok uzun saatler çalışan çalışanlar; boş zaman ve kişisel bakıma ayrılan zaman)
+
+(5) Sağlık (Yaşam beklentisi; Kendi beyan ettiği sağlık durumu)
+
+(6) Eğitim (Eğitim kazanımı; Eğitimde geçen yıllar; Öğrencilerin becerileri)
+
+(7) Topluluk (Sosyal ağ)
+
+(8) Sivil katılım (Kural koyma konusunda danışma; seçmen katılımı)
+
+(9) Çevre (Su kalitesi; Hava kirliliği) [@mizobuchi2014measuring].
 
 ## Çalışmanın Amacı
-Bu bölümde yaptığınız çalışmanın amacından ve öneminden birkaç paragraf ile bahsediniz.
 
-## Literatür 
+Bu çalışmanın amacı, OECD tarafından sunulan Daha İyi Yaşam Endeksi verileri üzerinden ülkelerin refah düzeylerini ölçmek ve "*Yaşamdan Memnuniyet*" kavramını çeşitli ölçütlerle değerlendirmektir. Bu yönüyle çalışma, literatüre çeşitli katkılarda bulunabilir. Bunlardan bazıları şu şekilde sıranabilir:
 
-Bu bölümde konu ile ilgili olarak okuduğunuz makaleleri referans vererek tartışınız. **Her makaleyi ayrı başlık altında tek tek özetlemeyiniz.** Literatür taramasında **en az altı** makaleye atıf yapılması ve bu makalelerden **en az ikisinin İngilizce** olması gerekmektedir.
+1.  Veri Kaynağı ve Ölçüm Aracı: Bu çalışma, OECD'nin Daha İyi Yaşam Endeksi'ni kullanarak ülkelerin refah düzeylerini ölçmektedir. Bu endeks, farklı sosyo-ekonomik faktörleri içeren kapsamlı bir veri setine dayanmaktadır. Bu çalışma, Daha İyi Yaşam Endeksi'nin kullanımını ve etkisini literatüre katkıda bulunarak, ölçüm aracının güvenilirliği ve geçerliliği hakkında bilgi sağlayabilir.
+2.  Yaşamdan Memnuniyetin Ölçülmesi: Çalışma, yaşamdan memnuniyetin çeşitli ölçütlerle değerlendirilmesine odaklanmaktadır. Bu, literatürdeki diğer çalışmalara ek olarak, farklı sosyo-ekonomik faktörlerin yaşamdan memnuniyet üzerindeki etkisini daha ayrıntılı bir şekilde analiz etmeyi amaçlamaktadır. Bu çalışma, farklı ölçütlerin yaşamdan memnuniyet üzerindeki etkisini anlamamıza ve gelecekteki politika kararlarını şekillendirmemize yardımcı olabilir.
+3.  Uluslararası Karşılaştırmalar: Bu çalışma, farklı ülkelerin refah düzeylerini karşılaştırmak için Daha İyi Yaşam Endeksi'ni kullanmaktadır. Bu, uluslararası karşılaştırmalar yapmak ve ülkeler arasındaki farkları anlamak için önemli bir katkı sağlar. Bu çalışma, ülkeler arasındaki refah eşitsizliklerini belirlemek ve politika yapıcılarına yönelik öneriler sunmak amacıyla literatüre değerli bir perspektif sunabilir.
+4.  Veri Analizi ve İstatistiksel Yaklaşımlar: Çalışma, Daha İyi Yaşam Endeksi verilerini analiz etmek için istatistiksel yöntemler ve veri analizi teknikleri kullanmaktadır. Bu, literatürdeki diğer çalışmalara ek olarak, istatistiksel yaklaşımların ve analiz yöntemlerinin kullanımını göstermektedir. Bu çalışma, veri analizi ve istatistiksel modelleme konusunda ilgilenen araştırmacılara ve okuyuculara farklı bir metodoloji sunabilir.
 
-# Veri 
-Bu bölümde çalışmanızda kullandığınız veri setinin kaynağını, ham veri üzerinde herhangi bir işlem yaptıysanız bu işlemleri ve veri seti ile ilgili özet istatistikleri tartışınız. Bu bölümde tüm değişkenlere ait özet istatistikleri (ortalama, standart sapma, minimum, maksimum, vb. değerleri) içeren bir tablo (Tablo \ref{tab:ozet}) olması zorunludur. Tablolarınıza gerekli göndermeleri bir önceki cümlede gösterildiği gibi yapınız. [@perkins:1991]
+## Literatür
 
-Analize ait R kodları bu bölümde başlamalıdır. Bu bölümde veri setini R'a aktaran ve özet istatistikleri üreten kodlar yer almalıdır.
+@koronakos2020assessment 'e göre toplumlar hızla değişirken, ekonomi, politika, eğitim ve çevre gibi temel alanlarda dramatik değişiklikler yaşanmaktadır. Ancak, ekonomik büyüme her zaman diğer toplumsal boyutlarla aynı oranda ilerlemez ve faydaları tüm toplum kesimlerine eşit şekilde dağılmaz. Bu nedenle, yaşam kalitesi gelirden daha önemlidir ve toplumun gerçek durumunu anlamak için sıradan gelir temelli ölçütlerin ötesine geçmek ve daha kapsamlı ölçütlere odaklanmak önemlidir. Geleneksel olarak, ekonomik büyüme ve gayri safi yurtiçi hasıla (GSYİH) gibi gelir temelli göstergeler, bir ülkenin refah düzeyini ölçmek için kullanılmaktadır. Ancak, bu göstergeler, toplumun gerçek durumunu tam olarak yansıtmada yetersiz kalabilir. Örneğin, GSYİH'nın artması, ekonomik büyümenin olduğunu gösterse de, bu büyümenin sosyal adalet, eşitlik, çevresel sürdürülebilirlik gibi diğer önemli faktörleri nasıl etkilediğini göstermez. Bu nedenle, toplumun gerçek durumunu anlamak ve değerlendirmek için sadece ekonomik göstergelere değil, daha kapsamlı ve çok boyutlu ölçütlere odaklanmak gerekmektedir. Yaşam kalitesini ve toplumsal ilerlemeyi değerlendirmek için eğitim, sağlık, çevre kalitesi, güvenlik, sosyal adalet gibi farklı alanlardaki veriler ve göstergeler kullanılmalıdır. Bu daha kapsamlı yaklaşım, toplumun gerçek ihtiyaçlarına ve refahına odaklanmayı sağlayarak, politika yapıcıların daha bilinçli kararlar almasına ve toplumun tüm kesimlerine eşit fayda sağlanmasına yardımcı olabilir.
+
+Daha iyi koşullarda ve standartlarda yaşamak tarihin her döneminde önemini koruyan konuların başında gelmektedir. Hukuksal düzenlemeler, teknolojik gelişmeler, sağlık sistemindeki iyileşmeler, refah artışının sağlanması ve sosyal katılımın tesis edilmesi gibi adımlar toplumun kalkınmışlık ve gelişmişlik seviyesinin bir göstergesi olarak değerlendirilmektedir. Bireyin hayata karşı genel tutumu ve yaşamdan duyduğu memnuniyet olarak ifade edilen yaşam tatmini, yüzlerce hatta binlerce değişkenden etkilenmekte ve tamamen bireyin algısına göre şekillenmektedir. Benzer bir biçimde ülkelerin de mutluluk ve refah seviyelerinin ölçümlenmesi için yalnızca gelirin kullanıldığı modeller yeterli olmamaktadır [@bacsol2018oecd]. Yaşam memnuniyeti, iyi zihinsel durumlar ve insanların hayatlarını nasıl geçirecekleri ile ilgilidir. OECD ülkeleri genelinde ortalama yaşam memnuniyeti(0-10 ölçeğinde ölçülür) 6'nın altından 8'in üstüne kadar değişkenlik göstermektedir [@petekrefahin].
+
+Yapılan araştırmalarda veri analizi yöntemlerinde hiyerarşik kümeleme analizi ile Ward yöntemi ve kareli Öklid uzaklığı kullanılarak dendogram elde edilmiş ve küme sayısı belirlenmiş [@keklik2020ics], Çok Boyutlu Ölçekleme (ÇBÖ) Analizi yapılarak gözlenen birimler ve nesneler arasındaki benzerlikler ya da farklılıkları açıklamada gözlemcilere yardımcı olması ve boyutların altında yatan anlamlı yapıların ortaya çıkarılması hedeflenmiştir [@csenaras2016oecd].
+
+# Veri
+
+Bu çalışmada, OECD tarafından düzenlenen Better Life Index (BLI-Daha İyi Yaşam Endeksi) veri seti <https://stats.oecd.org/Index.aspx?DataSetCode=BLI#> sitesinden alınarak kullanılmıştır. Dosya, Export kısmından Text file (CSV) formatında indirildikten sonra ham veri olarak R Studio'da işlenmiştir. Ham veri iken dosyada 17 değişken ve 2369 gözlem bulunmaktayken, dosya işlendikten sonra değişken sayısı 26, gözlem sayısı ise 17 olmuştur. Gözlem sayısındaki düşüşte aynı ülkenin farklı satırlarda tekrar etmesinin indirgenmesi etkili olurken, değişken sayısının artışında anlamlı verinin ters çevrilerek, tablonun genişletilmesiyle elde edilmesi durumu etkilidir. Bu nedenle, dosya işlemesinde öncelikli olarak ham veride faydası olmayacağı düşünülen değişkenler listeden çıkarılmıştır (Tablo 1). Bunlar; "Indicator", "PowerCode Code", "Value", "Reference Period COde", "Reference Period", "Flag Codes", "Flags" gibi değişkenlerdir. Bu değişkenler çıkarıldıktan sonra gözlemlerde yer alan ve önemli olduğu düşünülen "Labour market insecurity", "Dwellings without basic facilities", "Housing expenditure", "Feeling safe walking alone at night", "Rooms per person", "Employment rate", "Long-term unemployment rate", "Quality of support network", "Educational attainment", "Years in education", "Air pollution", "Water quality", "Voter turnout", "Life expectancy", "Self-reported health", "Life satisfaction", "Homicide rate", "Employees working very long hours", "Time devoted to leisure and personal care" faktörleri R Studio'da pivot_wider fonksiyonu ile genişletilmiştir. Bu durum aynı zamanda gözlemlerde birden fazla kez tekrar eden ülke sayısının teke düşmesini de sağlamıştır. Veri temizlemenin son aşamasında ise N/A olan, yani değer girilmemiş olan verilerin bulunduğu sütun ve satırlar da elenmiştir. Böylece veri arı bir hal kazanmıştır.
+
+Sayısal verilere ilişkin özet istatistiklerde, Standart Sapma Değerleri çok yüksek çıkan değerler tablodan çıkarılmıştır. Ortalamanın en düşük olduğu değerler açısından kişi başı oda sayısının 1.66 olduğu, standart sapmanın en yüksek olduğu değer olan gece yalnız yürürken güvenli hissetme değişkeninin 15.71 olduğu, uzun zamanlı işsizlik oranının 0 olduğu ülkenin bulunduğu, kaliteli destek ağında ise 100 üzerinden 100 maksimum değere ulaşıldığı gözlenmiştir (Tablo 2).
 
 ```{r, echo=FALSE}
 library(tidyverse)
@@ -60,6 +87,23 @@ library(here)
 betterlifeindex <- readr::read_csv(here("data/betterlifeindex.csv"))
 ```
 
+```{r results='asis', echo=FALSE}
+
+library(knitr)
+library(kableExtra)
+library(tibble)
+
+Tablo.1 <- tibble(
+  Degiskenler = c("Country","Inequality", "Indicator", "PowerCode Code", "Value", "Reference Period COde", "Reference Period", "Flag Codes", "Flags"),
+  Türü = c("character", "character", "character", "double", "double", "logical", "logical", "logical", "logical"),
+  Açıklamalar = c("Ülke Adı", "Cinsiyetler Arası Eşitlizlik (Oransal ve Sayısal)", "Gösterge", "Güç Kodu", "Değer", "Referans Periyot Kodu", "Referans Periyodu", "Bayrak Kodu", "Bayrak Şekilleri"))
+
+Tablo.1 %>%
+  kable(format = "markdown", caption = "Veri Seti Değişkenleri ve Açıklamaları", align = "l", label = "Tablo1") %>%
+  kable_styling(bootstrap_options = "striped", full_width = FALSE) %>%
+  print(booktabs = TRUE, comment = FALSE, caption.placement = "top")
+
+```
 
 ```{r, echo=FALSE}
 betterlifeindex <- subset(betterlifeindex, select = -c(1, 3, 5:7, 9:14, 16:17))
@@ -67,7 +111,6 @@ betterlifeindex <- subset(betterlifeindex, select = -c(1, 3, 5:7, 9:14, 16:17))
 
 ```{r, echo=FALSE}
 betterlifeindex_wide <- pivot_wider(betterlifeindex, names_from = "Indicator", values_from = "Value")
-betterlifeindex_wide
 ```
 
 ```{r, echo=FALSE}
@@ -80,32 +123,117 @@ betterlifeindex_na <- betterlifeindex %>%
   drop_na()
 ```
 
+```{r, echo=FALSE, include = FALSE}
+
+library(tidyverse)
+library(skimr)
+
+titanic <- tibble::as_tibble(betterlifeindex_na)
+glimpse(betterlifeindex_na)
+betterlifeindex.summary <- skimr::skim_without_charts(betterlifeindex)
+print(betterlifeindex.summary)
+
+```
+
+İncelenecek olan veri setindeki değişkenlere ait özet istatistikler **Tablo 2**'de yer almaktadır.
+
 ```{r, echo=FALSE}
-betterlifeindex_na %>%
-  select(`Feeling safe walking alone at night`, `Life satisfaction`, `Homicide rate`) %>%
-  GGally::ggpairs()
+
+library(xtable) 
+# devtools::install_github("emraher/summarytools")
+library(summarytools)
+st_options(lang = "tr")
+
+```
+
+```{r results='asis', echo=FALSE}
+
+Tablo.2 <- betterlifeindex %>%
+  select("Country", "Inequality", "Labour market insecurity", "Dwellings without basic facilities", "Housing expenditure", "Feeling safe walking alone at night", "Rooms per person", "Employment rate", "Long-term unemployment rate", "Quality of support network", "Educational attainment", "Years in education", "Air pollution", "Water quality", "Voter turnout", "Life expectancy", "Self-reported health", "Life satisfaction", "Homicide rate", "Employees working very long hours", "Time devoted to leisure and personal care") %>% 
+  descr(stats = c("mean", "sd", "min", "med", "max"), na.rm = TRUE, transpose = TRUE) %>%
+  xtable(format = "markdown", caption = "Sayısal Verilere Dair Özet İstatistikler",
+         align = c("l", "l", "l", "l", "l", "l"), label = "Tablo 2") %>%
+  print(booktabs = TRUE, comment = FALSE, caption.placement = "top")
+
 ```
 
 # Yöntem ve Veri Analizi
-Bu bölümde veri setindeki bilgileri kullanarak çalışmanın amacına ulaşmak için kullanılacak yöntemleri açıklayın. Derste işlenen/işlenecek olan analiz yöntemlerinden (Hipotez testleri ve korelasyon analizi gibi) çalışmanın amacına ve veri setine uygun olanlar bu bölümde kullanılmalıdır. [@newbold:2003; @ozsoy:2010; @ozsoy:2014]
 
-Örneğin, regresyon analizi gerçekleştiriyorsanız tahmin ettiğiniz denklemi bu bölümde tartışınız. Denklemlerinizi ve matematiksel ifadeleri $LaTeX$ kullanarak yazınız.
+OECD veri setinde yer alan Gelir (Hanehalkı geliri; Hanehalkı mali serveti), İşler (İstihdam oranı; Kişisel kazanç; İş güvencesi; Uzun süreli işsizlik oranı), Barınma (Kişi başı oda; Barınma giderleri; Temel imkanları olan konutlar), İş-yaşam dengesi (Çok uzun saatler çalışan çalışanlar; boş zaman ve kişisel bakıma ayrılan zaman), Sağlık (Yaşam beklentisi; Kendi beyan ettiği sağlık durumu), Eğitim (Eğitim kazanımı; Eğitimde geçen yıllar; Öğrencilerin becerileri), Topluluk (Sosyal ağ), Sivil katılım (Kural koyma konusunda danışma; seçmen katılımı), Çevre (Su kalitesi; Hava kirliliği) [@mizobuchi2014measuring] değişkenleri arasındaki ilişkiyi test etmek için mevcut veri setindeki ilgili bağımsız değişkenler üzerinde birtakım istatistiksel testler ve grafik görselleştirmeler yapılmıştır.
 
-$$
-Y_t = \beta_0 + \beta_N N_t + \beta_P P_t + \beta_I I_t + \varepsilon_t
-$$
+Bu grafik görselleştirmelerden ilki dağılım matrisidir. Bu matris, değişkenler arasındaki ilişkileri görselleştirmek ve analiz etmek için kullanışlı bir araçtır. Scatterplotlar sayesinde değişkenler arasındaki lineer ve olası olmayan ilişkileri görmekteyiz. Korelasyon katsayıları ise değişkenler arasındaki ilişkinin gücünü ölçmektedir. Burada temel imkanları olan konutlar ile konut harcamaları arasında -0.385 değerinde bir negatif korelasyon, temel imkanları olan konutlar ile kişi başı düşen oda sayısı arasında -0.414 değerinde bir negatif korelasyon ve yaşamdan memnuniyet ile de -0.479 değerinde bir negatif korelasyon gözlenmiştir. Konut harcamaları ile oda başı kişi sayısı ve yaşamdan memnuniyet arasında da birer negatif korelasyon gözlenmekte iken, oda başı kişi sayısı ile yaşamdan memnuniyet açısından pozitif korelasyon görülmektedir (Şekil \@ref(fig:GGally) ).
 
-Bu bölümde analize ilişkin farklı tablolar ve grafiklere yer verilmelidir. Çalışmanıza uygun biçimde histogram, nokta grafiği (Şekil \@ref(fig:plot) gibi), kutu grafiği, vb. grafikleri bu bölüme ekleyiniz. Şekillerinize de gerekli göndermeleri bir önceki cümlede gösterildiği gibi yapınız.
+```{r, GGally, fig.align='center', fig.cap='Dağılım Matrisi', echo=FALSE}
+betterlifeindex_na %>%
+  select("Dwellings without basic facilities", "Housing expenditure", "Rooms per person", "Life satisfaction") %>%
+  GGally::ggpairs()
+```
+
+```{r, ggcorrplot, fig.align='center', fig.cap='Dağılım Matrisi', echo=FALSE}
+library(ggcorrplot)
+
+betterlifeindex_na %>% 
+  select("Long-term unemployment rate", "Labour market insecurity", "Employment rate", "Life satisfaction") %>% 
+  cor() %>% 
+  round(3) %>% 
+  ggcorrplot(., 
+             hc.order = TRUE, 
+             type = "lower", 
+             outline.color = "white", 
+             
+             lab = TRUE)
+```
+
+```{r, ggscatter,fig.align='center', fig.cap='Doğrusal Regresyon', echo=FALSE}
+library("ggpubr")
+ggscatter(betterlifeindex_na, 
+          x = "Feeling safe walking alone at night", 
+          y = "Life satisfaction", 
+          color = "steelblue",
+          add = "reg.line", 
+          add.params = list(color = "blue"),
+          conf.int = TRUE, 
+          cor.coef = TRUE, 
+          cor.coef.coord = c(15, 1),
+          cor.method = "pearson",
+          ggtheme = theme_minimal())
+```
+
+```{r, echo=FALSE}
+shapiro.test(betterlifeindex_na$"Life satisfaction")
+print(shapiro.test(betterlifeindex_na$"Life satisfaction"))
+```
+
+```{r, ggplot, fig.align='center', fig.cap='Saçılım Grafiği',echo=FALSE}
+p1 <- betterlifeindex_na %>% 
+  ggplot(aes(sample = "Air pollution")) +
+  stat_qq() +
+  stat_qq_line()
+
+p2 <- betterlifeindex_na %>% 
+  ggplot(aes(sample = "Life satisfaction")) +
+  stat_qq() +
+  stat_qq_line()
+
+
+gridExtra::grid.arrange(p1, p2)
+
+```
 
 
 # Sonuç
-Bu bölümde çalışmanızın sonuçlarını özetleyiniz. Sonuçlarınızın başlangıçta belirlediğiniz araştırma sorusuna ne derece cevap verdiğini ve ileride bu çalışmanın nasıl geliştirilebileceğini tartışınız.
 
-**Kaynakça bölümü Rmarkdown tarafından otomatik olarak oluşturulmaktadır. Taslak dosyada Kaynakça kısmında herhangi bir değişikliğe gerek yoktur.** 
+İstatistiksel karşılaştırmalar sonucunda, bazı ülkelerin daha yüksek yaşamdan memnuniyeti seviyelerine sahip olduğu görülmüştür. Örneğin, eğitim düzeyi yüksek olan ülkelerde genellikle daha yüksek yaşamdan memnuniyeti değerleri gözlenmiştir. Benzer şekilde, çevre kalitesi yüksek olan ülkelerde de daha yüksek yaşamdan memnuniyeti değerleri tespit edilmiştir.
 
-**_Taslakta bu cümleden sonra yer alan hiçbir şey silinmemelidir._**
+Bu istatistiksel karşılaştırmalar, politika yapıcıların toplumun refahını artırmak için hangi alanlara odaklanmaları gerektiği konusunda önemli bilgiler sağlamaktadır. Örneğin, eğitim ve çevre kalitesi gibi alanlarda yapılacak iyileştirmelerin yaşamdan memnuniyeti düzeyini olumlu yönde etkileyebileceği sonucuna varılmıştır.
+
+Bu çalışma, gelir temelli ölçütlerin ötesine geçerek toplumların refahını değerlendirmek için istatistiksel analizleri kullanmanın önemini vurgulamaktadır. İstatistiksel karşılaştırmalar, objektif bir şekilde ülkelerin durumunu değerlendirmek ve politika yapıcıların karar süreçlerine veriye dayalı bir yaklaşım sunmak açısından önemlidir.
+
+
 
 \newpage
-# Kaynakça {#references}
-<div id="refs"></div>
 
+# Kaynakça {#references}
+
+::: {#refs}
+:::
